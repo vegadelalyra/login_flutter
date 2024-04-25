@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "793398910895",
+    "project_id": "vegadelalyra-flutter-notes",
+    "storage_bucket": "vegadelalyra-flutter-notes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:793398910895:android:347cd5c477bba093b9595a",
+        "android_client_info": {
+          "package_name": "co.woldev.mynotes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBZfPEHvX1-AvkLOGuWGGpzK17S_LRMKk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
