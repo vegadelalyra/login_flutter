@@ -1,14 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mynotes/firebase_options.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class RegisterView extends StatefulWidget {
+  const RegisterView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
 
@@ -28,9 +30,11 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    // return const Placeholder();
+    // return Container(color: Colors.red);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text('Register'),
       ),
       body: Column(children: [
         TextField(
@@ -55,34 +59,27 @@ class _LoginViewState extends State<LoginView> {
 
             try {
               final userCredential = await FirebaseAuth.instance
-                  .signInWithEmailAndPassword(email: email, password: password);
-
+                  .createUserWithEmailAndPassword(
+                      email: email, password: password);
               print(userCredential);
             } on FirebaseAuthException catch (e) {
-              if (e.code == 'invalid-credential') {
-                print('Invalid credentials');
-              } else if (e.code == 'invalid-email') {
-                print('Invalid email');
+              if (e.code == 'weak-password') {
+                print('Invalid Password: too weak.');
+              } else if (e.code == 'email-already-in-use') {
+                print('Email is registered already.');
               } else {
-                print('SOMETHING ELSE HAPPENED');
                 print(e.code);
               }
-            } catch (e) {
-              print('something bad happened');
-              print(e);
-              print(e.runtimeType);
             }
           },
-          child: const Text('Login'),
+          child: const Text('Register'),
         ),
         TextButton(
             onPressed: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/register/',
-                (route) => false,
-              );
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/login/', (route) => false);
             },
-            child: const Text('Not registered yet? Register here!'))
+            child: const Text('Already registered? Login here!'))
       ]),
     );
   }
