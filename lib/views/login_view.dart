@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mynotes/constants/routes.dart';
+import 'package:mynotes/utilities/show_error_dialog.dart';
 import 'dart:developer' as devtools show log;
 
 class LoginView extends StatefulWidget {
@@ -60,21 +62,30 @@ class _LoginViewState extends State<LoginView> {
 
               devtools.log(userCredential.toString());
 
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil('/notes/', (route) => false);
+              if (context.mounted) {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil(notesRoute, (route) => false);
+              }
             } on FirebaseAuthException catch (e) {
-              if (e.code == 'invalid-credential') {
+              if (e.code == 'invalid-credential' && context.mounted) {
+                await showErrorDialog(context, 'Wrong credentials');
                 devtools.log('Invalid credentials');
-              } else if (e.code == 'invalid-email') {
+              } else if (e.code == 'invalid-email' && context.mounted) {
                 devtools.log('Invalid email');
+                await showErrorDialog(context, 'Invalid email');
               } else {
                 devtools.log('SOMETHING ELSE HAPPENED');
                 devtools.log(e.code);
+                if (context.mounted) {
+                  await showErrorDialog(context, 'Error: ${e.code}');
+                }
               }
             } catch (e) {
               devtools.log('something bad happened');
               devtools.log(e.toString());
-              devtools.log(e.runtimeType.toString());
+              if (context.mounted) {
+                await showErrorDialog(context, e.toString());
+              }
             }
           },
           child: const Text('Login'),
@@ -82,7 +93,7 @@ class _LoginViewState extends State<LoginView> {
         TextButton(
             onPressed: () {
               Navigator.of(context).pushNamedAndRemoveUntil(
-                '/register/',
+                registerRoute,
                 (route) => false,
               );
             },
